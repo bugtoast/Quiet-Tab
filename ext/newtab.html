@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en" style="color-scheme: light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>New Tab</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%278%27 fill=%27%23222429%27/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/instrument-serif.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="bgimg"></div>
+<div id="pattern"></div>
+<div id="board"></div>
+<div id="drop"><span>Drop image to pin it</span></div>
+
+<header class="clock">
+  <div id="time">--:--</div>
+  <div id="date"></div>
+</header>
+
+<nav id="toolbar" aria-label="Shortcuts">
+  <div id="links"></div>
+  <span class="sep"></span>
+  <div class="add-wrap">
+    <button id="addBtn" class="tb-btn" data-name="Add" aria-label="Add to board" aria-haspopup="menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></svg>
+    </button>
+    <div id="addMenu" role="menu">
+      <div class="am-title">Add to board</div>
+      <button id="addPin" role="menuitem"><span class="am-ic am-img"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="3.5"/><path d="M3.8 16.5l4.4-4.4a1.6 1.6 0 0 1 2.3 0l5.6 5.6"/><path d="M14 15.4l1.6-1.6a1.6 1.6 0 0 1 2.3 0l2.4 2.4"/><circle cx="15.5" cy="9" r="1.4"/></svg></span><span class="am-txt"><strong>Image</strong><small>Upload, drop or paste</small></span><kbd>⌘V</kbd></button>
+      <button id="addNote" role="menuitem"><span class="am-ic am-note"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5V7A2.5 2.5 0 0 0 18 4.5H6A2.5 2.5 0 0 0 3.5 7v11A2.5 2.5 0 0 0 6 20.5h8.5z"/><path d="M14.5 20.5v-4a2 2 0 0 1 2-2h4"/></svg></span><span class="am-txt"><strong>Sticky note</strong><small>Jot something down</small></span><kbd>N</kbd></button>
+      <button id="addTodo" role="menuitem"><span class="am-ic am-todo"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="M7.5 9l1.5 1.5L12 7.5M7.5 15l1.5 1.5L12 13.5M14.5 9h2.5M14.5 15h2.5"/></svg></span><span class="am-txt"><strong>To-do list</strong><small>Tick things off</small></span><kbd>T</kbd></button>
+      <div class="am-sep"></div>
+      <div class="am-title">Toolbar</div>
+      <button id="addLink" role="menuitem"><span class="am-ic am-link"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></svg></span><span class="am-txt"><strong>Shortcut</strong><small>Pin a site to the toolbar</small></span><kbd>S</kbd></button>
+    </div>
+  </div>
+  
+  <button id="openSettings" class="tb-btn" data-name="Settings" aria-label="Settings">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </button>
+</nav>
+<dialog id="linkDlg" aria-labelledby="dlgTitle">
+  <form method="dialog" id="dlgForm" autocomplete="off">
+    <div class="dlg-head">
+      <span class="dlg-prev" id="dlgPrev"></span>
+      <div><h4 id="dlgTitle">New shortcut</h4><p id="dlgHost">Add a site to your toolbar</p></div>
+    </div>
+    <div class="group fields">
+      <label class="field"><span>URL</span><input id="dUrl" placeholder="example.com" required></label>
+      <label class="field"><span>Name</span><input id="dName" placeholder="Optional" maxlength="40"></label>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn ghost" id="dlgCancel">Cancel</button>
+      <button type="submit" class="btn primary" id="dlgSave">Add shortcut</button>
+    </div>
+  </form>
+</dialog>
+<input type="file" id="pinFile" accept="image/*" multiple hidden>
+
+<div id="scrim"></div>
+<aside id="panel" aria-hidden="true">
+  <div class="panel-head">
+    <h2>Settings</h2>
+    <button id="closeSettings" class="icon-btn" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="panel-body">
+    <section>
+      <h3>Appearance</h3>
+      <div class="cards two" id="mode">
+        <button data-v="light" class="card"><span class="pv pv-light"><span class="mock"><i class="m-clock"></i><i class="m-line"></i><i class="m-bar"></i></span></span><span class="lbl"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg>Light</span></button>
+        <button data-v="dark" class="card"><span class="pv pv-dark"><span class="mock"><i class="m-clock"></i><i class="m-line"></i><i class="m-bar"></i></span></span><span class="lbl"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>Dark</span></button>
+      </div>
+    </section>
+    <section>
+      <h3>Toolbar position</h3>
+      <div class="cards four" id="barPos"><button data-v="bottom" class="card"><span class="pv pv-bar pb-bottom"><i></i></span><span class="lbl">Bottom</span></button><button data-v="top" class="card"><span class="pv pv-bar pb-top"><i></i></span><span class="lbl">Top</span></button><button data-v="left" class="card"><span class="pv pv-bar pb-left"><i></i></span><span class="lbl">Left</span></button><button data-v="right" class="card"><span class="pv pv-bar pb-right"><i></i></span><span class="lbl">Right</span></button></div>
+    </section>
+    <section>
+      <div class="sec-head"><h3>Colors</h3><button class="mini" id="resetColors" title="Reset colors"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.64-6.36"/><path d="M3 3v6h6"/></svg>Reset</button></div>
+      <div class="group">
+        <div class="crow"><label class="sw" for="cAccent"><input type="color" id="cAccent"></label><div class="ctext"><strong>Accent</strong><span>Buttons, toggles, highlights</span></div><div class="hex"><span>#</span><input id="cAccentHex" data-k="accent" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Accent hex code"></div></div>
+        <div class="crow"><label class="sw" for="cBg"><input type="color" id="cBg"></label><div class="ctext"><strong>Background</strong><span>Page and panel surface</span></div><div class="hex"><span>#</span><input id="cBgHex" data-k="bg" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Background hex code"></div></div>
+        <div class="crow"><label class="sw" for="cText"><input type="color" id="cText"></label><div class="ctext"><strong>Text</strong><span>Clock, labels, icons</span></div><div class="hex"><span>#</span><input id="cTextHex" data-k="text" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Text hex code"></div></div>
+      </div>
+      <div class="presets" id="presets"></div>
+    </section>
+    <section>
+      <h3>Clock</h3>
+      <div class="group">
+        <label class="grow toggle"><span class="gi"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div class="ctext"><strong>Show clock</strong><span>Turn off for a completely clean page</span></div><input type="checkbox" id="showClock"><i></i></label>
+      </div>
+      <div class="group clock-opts" style="margin-top:8px">
+        <label class="grow toggle"><span class="gi"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div class="ctext"><strong>24-hour format</strong><span>Show 16:30 instead of 4:30 pm</span></div><input type="checkbox" id="h24"><i></i></label>
+        <label class="grow toggle"><span class="gi"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4M12 14l3-3"/><circle cx="12" cy="14" r="8"/></svg></span><div class="ctext"><strong>Show seconds</strong><span>Ticking seconds beside the time</span></div><input type="checkbox" id="secs"><i></i></label>
+        <label class="grow toggle"><span class="gi"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span><div class="ctext"><strong>Show date</strong><span>Weekday and date under the clock</span></div><input type="checkbox" id="showDate"><i></i></label>
+        <label class="grow toggle"><span class="gi"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A4.7 4.7 0 0 0 21 9.7C21 6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/></svg></span><div class="ctext"><strong>Accent color</strong><span>Tint seconds and am/pm with your accent</span></div><input type="checkbox" id="secAccent"><i></i></label>
+      </div>
+      <div class="slider" id="clockSizeRow" style="margin-top:6px"><label for="clockSize">Size</label><input type="range" id="clockSize" min="50" max="160" step="5"><output id="clockSizeV"></output></div>
+    </section>
+    <section>
+      <h3>Pattern</h3>
+      <div class="cards three" id="pattern-seg">
+        <button data-v="plain" class="card"><span class="pv pv-plain"></span><span class="lbl">None</span></button>
+        <button data-v="dots" class="card"><span class="pv pv-dots"></span><span class="lbl">Dots</span></button>
+        <button data-v="grid" class="card"><span class="pv pv-grid"></span><span class="lbl">Grid</span></button>
+      </div>
+      <div class="slider" id="patOpRow"><label for="patOp">Opacity</label><input type="range" id="patOp" min="5" max="100"><output id="patOpV"></output></div>
+      <div class="slider" id="patSizeRow"><label for="patSize">Spacing</label><input type="range" id="patSize" min="12" max="64"><output id="patSizeV"></output></div>
+    </section>
+    <section>
+      <h3>Background image</h3>
+      <div class="upload">
+        <label class="btn" for="bgFile">Upload image</label>
+        <input type="file" id="bgFile" accept="image/*" hidden>
+        <button class="btn bin" id="clearImg" title="Remove background image" aria-label="Remove background image"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5.5 7l.9 11.1A2 2 0 0 0 8.4 20h7.2a2 2 0 0 0 2-1.9L18.5 7M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+      </div>
+      <div id="imgPreview"></div>
+      <div id="imgOpts">
+        <label class="row toggle"><span>Pattern overlay on image</span><input type="checkbox" id="overlay"><i></i></label>
+        <div class="slider"><label for="dim">Dim</label><input type="range" id="dim" min="0" max="80"><output id="dimV"></output></div>
+        <div class="slider"><label for="blur">Blur</label><input type="range" id="blur" min="0" max="20"><output id="blurV"></output></div>
+      </div>
+    </section>
+    <section>
+      <div class="sec-head"><h3>Canvas</h3><button class="mini" id="recenter" title="Back to the starting position"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>Recenter</button></div>
+      <div class="group">
+        <label class="grow toggle"><span class="gi"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg></span><div class="ctext"><strong>Drag to pan</strong><span>Move around by dragging empty space</span></div><input type="checkbox" id="canvas"><i></i></label>
+      </div>
+      <p class="hint" style="margin-top:8px">Tip: double-click empty space to jump back to the center.</p>
+    </section>
+    <section>
+      <h3>Pinboard</h3>
+      <div class="tiles">
+        <button class="tile" id="addPin2"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="3.5"/><path d="M3.8 16.5l4.4-4.4a1.6 1.6 0 0 1 2.3 0l5.6 5.6"/><path d="M14 15.4l1.6-1.6a1.6 1.6 0 0 1 2.3 0l2.4 2.4"/><circle cx="15.5" cy="9" r="1.4"/></svg><strong>Add image</strong><span>From your device</span></button>
+        <button class="tile" id="addNote2"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5V7A2.5 2.5 0 0 0 18 4.5H6A2.5 2.5 0 0 0 3.5 7v11A2.5 2.5 0 0 0 6 20.5h8.5z"/><path d="M14.5 20.5v-4a2 2 0 0 1 2-2h4"/></svg><strong>Add note</strong><span>A sticky note</span></button>
+        <button class="tile" id="addTodo2"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="M7.5 9l1.5 1.5L12 7.5M7.5 15l1.5 1.5L12 13.5M14.5 9h2.5M14.5 15h2.5"/></svg><strong>Add to-do</strong><span>A checklist</span></button>
+      </div>
+      <p class="hint" style="margin:12px 0">Drop or paste images anywhere. Drag to move, drag the corner to resize, and pin to lock in place.</p>
+      <button class="clear-row" id="clearBoard"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5.5 7l.9 11.1A2 2 0 0 0 8.4 20h7.2a2 2 0 0 0 2-1.9L18.5 7M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg><span>Clear all pinned items</span><em id="boardCount"></em></button>
+    </section>
+    <section>
+      <div class="sec-head"><h3>Shortcuts</h3><span class="count" id="linkCount"></span></div>
+      <ul id="linkList" class="group"></ul>
+      <p class="hint" style="margin-top:8px">Drag to reorder. The first nine open with <kbd>1</kbd>–<kbd>9</kbd>.</p>
+      <form id="linkForm" autocomplete="off">
+        <div class="form-head"><strong id="formTitle">New shortcut</strong><button type="button" class="mini" id="cancelEdit" hidden>Cancel</button></div>
+        <div class="group fields">
+          <label class="field"><span>Name</span><input id="lName" placeholder="Optional" maxlength="40"></label>
+          <label class="field"><span>URL</span><input id="lUrl" placeholder="example.com" required></label>
+        </div>
+        <button type="submit" class="btn primary wide" id="saveLink"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Add shortcut</span></button>
+      </form>
+    </section>
+    <section>
+      <h3>Data</h3>
+      <p class="hint">Back up your settings, shortcuts, pinned images and notes to a file, or restore from one.</p>
+      <div class="upload">
+        <button class="btn" id="exportBtn">Export</button>
+        <label class="btn" for="importFile">Import</label>
+        <input type="file" id="importFile" accept="application/json" hidden>
+      </div>
+    </section>
+    <section>
+      <h3>Keyboard</h3>
+      <ul class="keys">
+        <li><span>Open toolbar link 1–9<small>Click the page first</small></span><span><kbd>1</kbd>–<kbd>9</kbd></span></li>
+        <li><span>Toggle settings</span><kbd>,</kbd></li>
+        <li><span>New sticky note</span><kbd>N</kbd></li>
+        <li><span>New to-do list</span><kbd>T</kbd></li>
+        <li><span>New shortcut</span><kbd>S</kbd></li>
+        <li><span>Pin an image</span><kbd>Paste</kbd></li>
+        <li><span>Close</span><kbd>Esc</kbd></li>
+      </ul>
+    </section>
+    <section class="danger-zone">
+      <h3>Danger zone</h3>
+      <div class="dz-card">
+        <div class="dz-head">
+          <strong>Reset Quiet Tab</strong>
+          <p>Permanently erases everything stored by this extension and restores the defaults. This can't be undone — export a backup first.</p>
+        </div>
+        <button class="btn" id="resetAll">Reset everything</button>
+      </div>
+    </section>
+  </div>
+</aside>
+<script src="app.js"></script>
+</body>
+</html>
