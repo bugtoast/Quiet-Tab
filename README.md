@@ -27,24 +27,6 @@ I wanted a new tab that didn't shout at me, so I made one: a big clock, a soft d
 
 Needs Chrome 111 or newer. It should also work in Edge, Brave and Arc.
 
-## Handy keys
-
-Click anywhere on the page first (Chrome puts the cursor in the address bar on a new tab).
-
-| Key | Does |
-| --- | --- |
-| `1`–`9` | Open a toolbar link |
-| `N` | New sticky note |
-| `T` | New to-do list |
-| `S` | Add a shortcut |
-| `,` | Open settings |
-| `Esc` | Close things |
-
-In to-do lists:
-- `Enter` on a task creates a new one directly below it.
-- `Backspace` on an empty task removes it.
-- `ArrowUp` / `ArrowDown` navigates smoothly between the title, tasks, and "Add a task" field.
-
 ## Privacy
 
 Nothing leaves your computer. There are no accounts, no analytics and no network requests. Fonts are bundled, and settings and images are stored locally in your browser. The only permissions are `storage`, `unlimitedStorage` (so photos fit) and `favicon` (to show site icons).
