@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Quiet Tab",
-  "version": "1.2.0",
+  "version": "1.1.0",
   "description": "A minimal, customizable New Tab page.",
   "chrome_url_overrides": {
     "newtab": "newtab.html"
