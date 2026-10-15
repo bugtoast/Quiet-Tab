@@ -177,6 +177,10 @@
         <li><span>Close</span><kbd>Esc</kbd></li>
       </ul>
     </section>
+    <section>
+      <h3>Help</h3>
+      <button class="clear-row tour-row" id="replayTour"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg><span>Replay the tutorial</span></button>
+    </section>
     <section class="danger-zone">
       <h3>Danger zone</h3>
       <div class="dz-card">
@@ -189,6 +193,31 @@
     </section>
   </div>
 </aside>
+<div id="tour" hidden>
+  <div class="tour-veil" aria-hidden="true"></div>
+  <div class="tour-spot" aria-hidden="true"></div>
+  <div class="tour-card" role="dialog" aria-modal="true" aria-labelledby="tourTitle" aria-describedby="tourBody">
+    <span class="tour-caret" aria-hidden="true"></span>
+    <div class="tour-stage">
+      <div class="tour-scene" aria-hidden="true"></div>
+      <button type="button" class="tour-skip" id="tourSkip">Skip tutorial<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="tour-bar" id="tourDots" role="group" aria-label="Tutorial progress"></div>
+    <div class="tour-text">
+      <span class="tour-kicker" id="tourStep"></span>
+      <h4 id="tourTitle"></h4>
+      <p id="tourBody"></p>
+    </div>
+    <div class="tour-foot">
+      <button type="button" class="tour-coach-skip" id="tourSkip2">Skip tutorial</button>
+      <span class="tour-hint"><kbd>&larr;</kbd><kbd>&rarr;</kbd> to navigate</span>
+      <div class="tour-nav">
+        <button type="button" class="tour-back" id="tourBack" aria-label="Previous step"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button type="button" class="tour-next" id="tourNext"><span></span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="app.js"></script>
 </body>
 </html>

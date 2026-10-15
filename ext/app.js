@@ -774,6 +774,7 @@
       }
       await store.clear();
       await store.set({ ...DEFAULT, ...data.settings });
+      await store.set({ onboarding: { status: 'done' } }); // restoring a backup isn't a first run
       location.reload();
     } catch { toast('Not a valid Quiet Tab backup'); }
   };
@@ -805,8 +806,145 @@
   });
 
   /* ---------- boot ---------- */
+  /* ---------- onboarding tour: own storage key, so "Reset everything" brings it back ---------- */
+  const esc = (t) => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const hueOf = (n) => Math.abs([...n].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7)) % 360;
+  const nowParts = () => { const d = new Date(); let h = d.getHours(); if (!s.h24) h = h % 12 || 12; return { hm: `${s.h24 ? p2(h) : h}:${p2(d.getMinutes())}`, sec: p2(d.getSeconds()), date: d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }) }; };
+  const CURSOR = '<svg class="cursor" viewBox="0 0 24 24"><path d="M5 3l14 7-6.2 1.8L10 18z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+  const ico = (p) => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  const todoRows = '<span class="on" style="--w:54px"></span><span style="--w:70px"></span><span style="--w:44px"></span>';
+  const SCENES = {
+    welcome: () => { const t = nowParts(); return `<div class="w-time"><span data-hm>${t.hm}</span></div><div class="mini-note w-note">Breathe.<br>Then begin.</div><div class="mini-photo w-photo"><i></i></div><div class="mini-todo w-todo">${todoRows}</div>`; },
+    clock: () => { const t = nowParts(); return `<div class="c-t"><span data-hm>${t.hm}</span>${s.secs ? `<em data-sec>${t.sec}</em>` : ''}</div><div class="c-d">${esc(t.date)}</div><div class="c-chips"><span>${s.h24 ? '24-hour' : '12-hour'}</span><span>Seconds</span><span>Date</span><span>Size</span></div>`; },
+    links: () => {
+      const ls = (s.links.length ? s.links : DEFAULT.links).slice(0, 4);
+      return `<div class="l-dock">${ls.map((l, i) => { const n = (l.name || l.url.replace(/^https?:\/\/(www\.)?/, '')).trim() || '?'; return `<span class="l-tile" style="--h:${hueOf(n)}">${esc(n[0].toUpperCase())}<kbd>${i + 1}</kbd></span>`; }).join('')}<span class="l-plus">+</span></div>${CURSOR}`;
+    },
+    add: () => {
+      const items = [
+        ['Image', '⌘V', 'var(--accent)', '<rect x="3.5" y="4.5" width="17" height="15" rx="3.5"/><path d="M3.8 16.5l4.4-4.4a1.6 1.6 0 0 1 2.3 0l5.6 5.6"/><circle cx="15.5" cy="9" r="1.4"/>'],
+        ['Note', 'N', '#d9a400', '<path d="M20.5 14.5V7A2.5 2.5 0 0 0 18 4.5H6A2.5 2.5 0 0 0 3.5 7v11A2.5 2.5 0 0 0 6 20.5h8.5z"/><path d="M14.5 20.5v-4a2 2 0 0 1 2-2h4"/>'],
+        ['To-do', 'T', '#2f9e6b', '<rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="M7.5 9l1.5 1.5L12 7.5M7.5 15l1.5 1.5L12 13.5M14.5 9h2.5M14.5 15h2.5"/>'],
+        ['Shortcut', 'S', '#d6336c', '<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/>']
+      ], pos = [[-126, 12], [-42, -10], [42, -10], [126, 12]];
+      return items.map(([n, k, c, p], i) => `<div class="a-item" style="--i:${i};--x:${pos[i][0]}px;--y:${pos[i][1]}px;--c:${c}"><span class="a-ic">${ico(p)}<kbd>${k}</kbd></span><small>${n}</small></div>`).join('') + `<span class="a-plus">${ico('<path d="M12 5v14M5 12h14"/>')}</span>`;
+    },
+    board: () => `<div class="mini-photo b-photo"><i></i></div><div class="mini-todo b-todo">${todoRows}</div><div class="b-wrap"><div class="mini-note b-note">Drag me<br>anywhere${CURSOR}</div></div>`,
+    theme: () => `<div class="t-win"><span class="t-time">9:41<em>08</em></span><span class="mini-note t-note"></span><span class="t-dock"><i></i><i></i><i></i><i></i></span></div><div class="t-sw"><i style="--c:#3b5bdb"></i><i style="--c:#8ea2ff"></i><i style="--c:#c2410c"></i><i style="--c:#34d399"></i></div><span class="t-ring"></span>`,
+    done: () => `<span class="d-glow"></span><span class="d-ring"></span><span class="d-ring"></span>${Array.from({ length: 12 }, (_, i) => `<span class="d-spark" style="--i:${i};--a:${i * 30}deg;--c:${['var(--accent)', '#f4c430', '#e5484d', '#34d399'][i % 4]}"></span>`).join('')}<span class="d-check"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></span>`
+  };
+  const TOUR = [
+    { scene: 'welcome', kicker: 'Welcome', next: 'Take the tour', title: 'A quieter <em>new tab.</em>', body: 'Everything you need and nothing you don’t. Here’s a 30-second look at how to make it yours.' },
+    { scene: 'clock', sel: '.clock', kicker: 'Clock', title: 'Time, told <em>beautifully.</em>', body: 'Your clock lives in the corner. Switch to 12-hour, show seconds or the date, change its size, or hide it in Settings → Clock.' },
+    { scene: 'links', sel: '#toolbar', kicker: 'Shortcuts', title: 'Favorites, <em>one tap</em> away.', body: 'Click a shortcut in the dock, or press <kbd>1</kbd>–<kbd>9</kbd> to jump straight there. Rename and reorder them in Settings.' },
+    { scene: 'add', sel: '#addBtn', kicker: 'Create', title: 'Add <em>anything.</em>', body: 'The plus button pins images, sticky notes, to-do lists and new shortcuts. Or skip the menu with <kbd>N</kbd>, <kbd>T</kbd> and <kbd>S</kbd>.' },
+    { scene: 'board', kicker: 'Pinboard', title: 'A canvas for your <em>thoughts.</em>', body: 'Drag anything anywhere, then use the handles to resize and rotate. Paste or drop images straight onto the page.' },
+    { scene: 'theme', sel: '#openSettings', kicker: 'Settings', title: 'Make it <em>unmistakably</em> yours.', body: 'Light or dark, accent colors, photos, patterns and more. Open Settings here, or press <kbd>,</kbd> anytime.' },
+    { scene: 'done', kicker: 'Ready', next: 'Start exploring', title: 'You’re <em>all set.</em>', body: 'Enjoy the calm. You can replay this tour anytime from Settings → Help.' }
+  ];
+  const tourEl = $('#tour'), tourCard = $('.tour-card'), tourSpot = $('.tour-spot');
+  let tourI = -1, tourPrevFocus = null, tourClock = 0;
+  TOUR.forEach((st, i) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', `Step ${i + 1}: ${st.kicker}`); b.onclick = () => showStep(i); $('#tourDots').append(b); });
+  const visibleRect = (sel) => { const el = sel && $(sel); if (!el) return null; const r = el.getBoundingClientRect(); return r.width && r.height && getComputedStyle(el).visibility !== 'hidden' ? r : null; };
+  function placeTour() {
+    const st = TOUR[tourI]; if (!st) return;
+    const el = st.sel && $(st.sel), r = visibleRect(st.sel);
+    tourEl.classList.toggle('targeted', !!r);
+    const caret = $('.tour-caret');
+    const vw = innerWidth, vh = innerHeight, cw = tourCard.offsetWidth, ch = tourCard.offsetHeight, gap = 22, m = 16;
+    let x = (vw - cw) / 2, y = (vh - ch) / 2, side = 'none';
+    if (r) {
+      // Hug the element: small padding for buttons, roomier for big blocks like the clock.
+      const pad = r.height < 60 ? 6 : 14, rad = parseFloat(getComputedStyle(el).borderRadius) || 0;
+      Object.assign(tourSpot.style, { left: r.left - pad + 'px', top: r.top - pad + 'px', width: r.width + pad * 2 + 'px', height: r.height + pad * 2 + 'px', borderRadius: (rad ? rad + pad : 20) + 'px' });
+      const cx = Math.min(Math.max(r.left + r.width / 2 - cw / 2, m), vw - cw - m), cy = Math.min(Math.max(r.top + r.height / 2 - ch / 2, m), vh - ch - m);
+      const fit = [
+        [cx, r.bottom + pad + gap, 'bottom', r.bottom + pad + gap + ch <= vh - m],
+        [cx, r.top - pad - gap - ch, 'top', r.top - pad - gap - ch >= m],
+        [r.right + pad + gap, cy, 'right', r.right + pad + gap + cw <= vw - m],
+        [r.left - pad - gap - cw, cy, 'left', r.left - pad - gap - cw >= m]
+      ].find(c => c[3]);
+      if (fit) {
+        [x, y, side] = fit;
+        // Point the caret at the element's center, kept clear of the card's rounded corners.
+        if (side === 'bottom' || side === 'top') caret.style.cssText = `left:${Math.min(Math.max(r.left + r.width / 2 - x - 7, 24), cw - 38)}px`;
+        else caret.style.cssText = `top:${Math.min(Math.max(r.top + r.height / 2 - y - 7, 24), ch - 38)}px`;
+      }
+    }
+    caret.dataset.side = side;
+    tourCard.style.left = Math.round(x) + 'px'; tourCard.style.top = Math.round(y) + 'px';
+  }
+  let tourSwapT = 0;
+  function showStep(i) {
+    tourI = Math.max(0, Math.min(i, TOUR.length - 1));
+    store.set({ onboarding: { status: 'active', step: tourI } });
+    const targeted = !!visibleRect(TOUR[tourI].sel);
+    clearTimeout(tourSwapT);
+    // Switching between the compact pointer card and the illustrated card changes the card's size,
+    // so fade it out, swap layout while invisible, and fade back in already in place.
+    if (!tourEl.hidden && tourCard.classList.contains('ready') && targeted !== tourEl.classList.contains('targeted')) {
+      tourCard.classList.add('swapping');
+      tourSwapT = setTimeout(() => renderStep(true), 220);
+    } else renderStep(false);
+  }
+  function renderStep(jump) {
+    const st = TOUR[tourI], last = tourI === TOUR.length - 1;
+    $('#tourStep').innerHTML = `${p2(tourI + 1)} <b>/ ${p2(TOUR.length)}</b> &nbsp;·&nbsp; ${st.kicker}`;
+    $('#tourTitle').innerHTML = st.title;
+    $('#tourBody').innerHTML = st.body;
+    $('.tour-scene').innerHTML = `<div class="sc sc-${st.scene}">${SCENES[st.scene]()}</div>`;
+    const txt = $('.tour-text'); txt.classList.remove('swap'); void txt.offsetWidth; txt.classList.add('swap');
+    $('#tourBack').disabled = tourI === 0;
+    $('#tourNext span').textContent = st.next || 'Next';
+    $('#tourSkip').hidden = $('#tourSkip2').hidden = last;
+    $$('#tourDots button').forEach((b, j) => { b.classList.toggle('on', j === tourI); b.classList.toggle('done', j < tourI); b.setAttribute('aria-current', j === tourI ? 'step' : 'false'); });
+    clearInterval(tourClock);
+    tourClock = setInterval(() => { const t = nowParts(); $$('.tour-scene [data-hm]').forEach(e => e.textContent = t.hm); $$('.tour-scene [data-sec]').forEach(e => e.textContent = t.sec); }, 1000);
+    if (jump) tourCard.classList.add('no-move');
+    tourEl.classList.toggle('targeted', !!visibleRect(st.sel));
+    placeTour();
+    if (jump) { void tourCard.offsetWidth; tourCard.classList.remove('no-move', 'swapping'); }
+    tourCard.classList.add('ready');
+    $('#tourNext').focus({ preventScroll: true });
+  }
+  function startTour(step = 0) {
+    setMenu(false); open(false);
+    if (tourI < 0) tourPrevFocus = document.activeElement;
+    tourEl.hidden = false;
+    tourCard.style.animation = 'none'; void tourCard.offsetWidth; tourCard.style.animation = '';
+    document.addEventListener('keydown', onTourKey, true);
+    addEventListener('resize', placeTour);
+    showStep(step);
+  }
+  function endTour(status) {
+    if (tourI < 0) return;
+    store.set({ onboarding: { status, step: tourI } });
+    tourI = -1; tourEl.hidden = true; clearInterval(tourClock); clearTimeout(tourSwapT);
+    tourCard.classList.remove('ready', 'swapping', 'no-move');
+    $('.tour-scene').innerHTML = '';
+    document.removeEventListener('keydown', onTourKey, true);
+    removeEventListener('resize', placeTour);
+    if (tourPrevFocus?.isConnected && tourPrevFocus !== document.body) tourPrevFocus.focus(); else document.activeElement?.blur();
+    if (status === 'skipped') toast('Tutorial skipped. Replay it from Settings → Help');
+  }
+  function onTourKey(e) {
+    // While the tour is open it owns the keyboard: no app shortcuts fire underneath it.
+    e.stopImmediatePropagation();
+    if (e.key === 'Escape') { e.preventDefault(); endTour('skipped'); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); $('#tourNext').click(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); if (tourI > 0) showStep(tourI - 1); }
+    else if (e.key === 'Tab') {
+      const f = [...$$('.tour-card button:not([disabled]):not([hidden])')].filter(b => b.offsetParent), a = f.indexOf(document.activeElement);
+      e.preventDefault(); f[(a + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+    }
+  }
+  $('#tourNext').onclick = () => tourI === TOUR.length - 1 ? endTour('done') : showStep(tourI + 1);
+  $('#tourBack').onclick = () => showStep(tourI - 1);
+  $('#tourSkip').onclick = $('#tourSkip2').onclick = () => endTour('skipped');
+  $('#replayTour').onclick = () => { tourPrevFocus = null; startTour(0); };
+
   async function boot() {
-    const d = await store.get([...Object.keys(DEFAULT), 'image']);
+    const d = await store.get([...Object.keys(DEFAULT), 'image', 'onboarding']);
     for (const k in DEFAULT) if (d[k] !== undefined) s[k] = d[k];
     if (!Array.isArray(s.board)) s.board = [];
     if (!Array.isArray(s.links)) s.links = structuredClone(DEFAULT.links);
@@ -819,6 +957,9 @@
     }
     applyTheme(); applyBar(); applyClockOpts(); renderLinks(); await applyBg();
     s.board.forEach(renderItem); applyPan(false);
+    // First run (or after a reset): show the tour; resume where the user left off if they closed mid-tour.
+    const ob = d.onboarding;
+    if (!ob || ob.status === 'active') setTimeout(() => startTour(ob?.step || 0), 350);
   }
   open(false);
   applyTheme(); tick();

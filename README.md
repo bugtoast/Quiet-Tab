@@ -4,7 +4,7 @@ A calm, minimal New Tab page for Chrome.
 
 I wanted a new tab that didn't shout at me, so I made one: a big clock, a soft dotted background, and a small toolbar with the sites I actually use. If you want more, there's a pinboard for images, sticky notes and to-do lists. If you don't, everything can be switched off.
 
-![Quiet Tab — new tab page](ext/screenshots/newtab.png)
+![Quiet Tab — new tab page](screenshots/newtab.png)
 
 ## What's inside
 
@@ -17,6 +17,11 @@ I wanted a new tab that didn't shout at me, so I made one: a big clock, a soft d
 - **A canvas you can pan.** Drag empty space to move around, and double-click to come back.
 - **Your look.** Light or dark mode, custom colors (with hex codes), dots, grid or plain backgrounds, or your own photo with dim and blur.
 - **Multi-tab synchronization & safe backups.** Seamlessly syncs settings and shortcuts across open tabs on focus, and export everything to a single JSON backup.
+- **Guided onboarding tour.** First run walks through the clock, shortcuts, creating items, the pinboard and settings; replay it anytime from Settings → Help.
+
+## Onboarding
+
+![Quiet Tab — onboarding](screenshots/onboarding.png)
 
 ## Install
 
