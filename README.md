@@ -41,3 +41,6 @@ Nothing leaves your computer. There are no accounts, no analytics and no network
 - Site icons come from Chrome's own cache, so a brand-new shortcut may show a placeholder until you've visited the site once.
 - Uploaded images are resized when you add them to keep things light.
 - Double-clicking the rotate or resize handles instantly resets them to their default orientation and size.
+
+---
+v1.1.1
