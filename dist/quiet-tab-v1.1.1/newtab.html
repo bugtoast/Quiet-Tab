@@ -194,28 +194,35 @@
   </div>
 </aside>
 <div id="tour" hidden>
-  <div class="tour-veil" aria-hidden="true"></div>
-  <div class="tour-spot" aria-hidden="true"></div>
-  <div class="tour-card" role="dialog" aria-modal="true" aria-labelledby="tourTitle" aria-describedby="tourBody">
-    <span class="tour-caret" aria-hidden="true"></span>
-    <div class="tour-stage">
-      <div class="tour-scene" aria-hidden="true"></div>
-      <button type="button" class="tour-skip" id="tourSkip">Skip tutorial<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    </div>
-    <div class="tour-bar" id="tourDots" role="group" aria-label="Tutorial progress"></div>
-    <div class="tour-text">
-      <span class="tour-kicker" id="tourStep"></span>
-      <h4 id="tourTitle"></h4>
-      <p id="tourBody"></p>
-    </div>
-    <div class="tour-foot">
-      <button type="button" class="tour-coach-skip" id="tourSkip2">Skip tutorial</button>
-      <span class="tour-hint"><kbd>&larr;</kbd><kbd>&rarr;</kbd> to navigate</span>
-      <div class="tour-nav">
-        <button type="button" class="tour-back" id="tourBack" aria-label="Previous step"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-        <button type="button" class="tour-next" id="tourNext"><span></span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  <div class="tq-veil" aria-hidden="true"><i class="tq-blob b1"></i><i class="tq-blob b2"></i><i class="tq-blob b3"></i><i class="tq-grain"></i></div>
+  <div class="tq" role="dialog" aria-modal="true" aria-labelledby="tourTitle" aria-describedby="tourBody">
+    <div class="tq-copy">
+      <div class="tq-top">
+        <div class="tq-bar" id="tourDots" role="group" aria-label="Tutorial progress"></div>
+      </div>
+      <div class="tq-text">
+        <span class="tq-num" id="tourNum" aria-hidden="true"></span>
+        <span class="tq-kicker" id="tourStep"></span>
+        <h2 id="tourTitle"></h2>
+        <p id="tourBody"></p>
+        <div class="tq-extra" id="tourExtra"></div>
+      </div>
+      <div class="tq-foot">
+        <span class="tq-hint"><kbd>&larr;</kbd><kbd>&rarr;</kbd> to navigate</span>
+        <div class="tq-nav">
+          <button type="button" class="tq-back" id="tourBack" aria-label="Previous step"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <button type="button" class="tq-next" id="tourNext"><span></span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
       </div>
     </div>
+    <div class="tq-stage" aria-hidden="true">
+      <div class="tq-device">
+        <div class="tq-chrome"><i></i><i></i><i></i><span class="tq-url"><svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg>New Tab</span></div>
+        <div class="tq-screen"><div class="mk" id="mk"></div></div>
+        <div class="tq-badge"><i></i><i></i><span><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 12.5l4.2 4.2 8.8-9.4"/></svg></span></div>
+      </div>
+    </div>
+    <button type="button" class="tq-skip" id="tourSkip">Skip tutorial<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
 </div>
 <script src="app.js"></script>
